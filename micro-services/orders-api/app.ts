@@ -3,8 +3,8 @@ import { ContainerConfig } from './inversify.config';
 //import * as express from 'express';
 import * as http from 'http';
 
-import {RestRoutes} from "./routes/rest.routes";
-import {MenuRoutes} from "./routes/menu.route";
+import {OrdersRoutes} from "./routes/orders.routes";
+
 var express = require('express');
 
 export class App {
@@ -13,10 +13,10 @@ export class App {
     //private config: IConnectionConfig;
     public static bootstrap(): App {
         const container = ContainerConfig.getContainer();
-        return new App( container.get( RestRoutes ),container.get(MenuRoutes));
+        return new App(container.get(OrdersRoutes));
     }
 
-    constructor(private restRoutes: RestRoutes, private menuRoutes: MenuRoutes) {
+    constructor(private restRoutes:OrdersRoutes) {
 
         this.initExpress();
         this.middleware()
@@ -32,15 +32,18 @@ export class App {
     private middleware(): void {
         this.express.use(express.json())
         this.express.use((req, res, next) => {
+
             res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', '*');
+            res.header('Access-Control-Allow-Headers', '*');
+
             next();
         });
     }
     private initRoutes(): void {
         const router = express.Router();
-
         this.express.use('/', this.restRoutes.router);
-        this.express.use('/', this.menuRoutes.router);
+
 
     }
 
@@ -49,9 +52,9 @@ export class App {
     }
 
     private listen() {
-        const port =  8090; //TODO add config
+        const port =  8098; //TODO add config
         this.server.listen(port, () => {
-            console.log(`rest-api running on port: ${port}`);
+            console.log(`orders-api running on port: ${port}`);
         });
     }
 }
