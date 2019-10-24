@@ -36,7 +36,7 @@ export interface IRest {
     name: string,
     address: string,
     phone: string,
-    id: string,
+    _id: string,
     delivery_hours: [
         {
             start: string,

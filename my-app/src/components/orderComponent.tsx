@@ -55,9 +55,9 @@ export class OrderComponent extends Component <OrderComponentProps, { list: IMen
 
         return (
             <div style={style}>
-
+                <div>Order list</div>
                 { list.map((r:IMenu,i:number) =>
-                    <div key={i} >{r.name }</div>
+                    <span key={i} >{r.name  }, </span>
 
                 )}
                 <button onClick={this.order.bind(this)}>Order</button>

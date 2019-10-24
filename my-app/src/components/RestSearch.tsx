@@ -35,12 +35,17 @@ export class RestSearch extends Component <RestSearchComponentProps, { list: IRe
         const { list } = this.state
 
         return (
+
             <div style={style}>
-            <input type={"text"} ref={this.restRef}/>
+                <div>Search for Restaurant </div>
+                <input type={"text"} ref={this.restRef}/>
             <button onClick={this.onRestSearchClick.bind(this)}>Search</button>
 
             { list.map((r:IRest,i:number) =>
-                <div key={i} onClick={()=> onRestClick(r)}>{r.name }</div>
+                <div key={i} onClick={()=> onRestClick(r)}>
+                    <span>{r.name }</span>
+                    <span>{r.address }</span>
+                </div>
 
             )}
             </div>

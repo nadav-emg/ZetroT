@@ -33,6 +33,19 @@ export interface IRest {
         return data;
 
     }
-}
+
+
+     async updateRest ( rest: IRest): Promise<IRest> {
+
+         /*if (name) {
+             params.append('name', name);
+         }*/
+
+         const { data } = await this.axs.put<IRest>('update',rest);
+         return data;
+
+     }
+
+ }
 
 export default new RestService()

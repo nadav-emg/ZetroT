@@ -3,7 +3,7 @@ import Modal from 'react-modal'
 
 //import restService, {IRest} from "../servies/restService";
 import menuService, {IMenu} from "../servies/menuService";
-import {IRest} from "../servies/restService";
+import restService, {IRest} from "../servies/restService";
 import {OrderComponent} from "./orderComponent";
 
 
@@ -22,7 +22,8 @@ interface MenuComponentState{
 Modal.setAppElement('#root')
 
 export class MenuComponent extends Component <MenuComponentProps, MenuComponentState>{
-
+    startRef?: React.RefObject<HTMLInputElement>
+    endRef?: React.RefObject<HTMLInputElement>
     constructor (props: MenuComponentProps) {
         super(props)
         this.state = {
@@ -37,6 +38,8 @@ export class MenuComponent extends Component <MenuComponentProps, MenuComponentS
 
             }
         }
+        this.startRef = React.createRef()
+        this.endRef = React.createRef()
 
 
         this.openModal = this.openModal.bind(this);
@@ -91,24 +94,49 @@ export class MenuComponent extends Component <MenuComponentProps, MenuComponentS
     }
 
     render() {
-
+        const style = {
+            width: 600,
+            border: '3px solid black',
+        };
         const { list, newMenu, isVisible, selectedOrder } = this.state
 
         if (!isVisible) {
             return <div></div>
         }
-
+        const {delivery_hours}= this.props.rest!
         return (
-            <div>
+
+            <div style={style}>
 
                 <div onClick={()=> this.onAddMenuClick()}>
-                    + add new menu
+                    + New Item
                 </div>
+                <div>
+                    { delivery_hours.map((d:{start:string,end:string},index:number) =>
+
+                            <div key={index}>
+
+                                <label>start:</label><span>{d.start} - </span>
+                                <label>end:</label><span> {d.end}</span>
+                                <label onClick={()=> this.removeDeivery(index)} >- click to remove -</label>
+                            </div>
+
+                        )}
+                        <div >
+                            <label>start:</label><input type={"text"} ref={this.startRef}/>
+                            <label>end:</label><input type={"text"} ref={this.endRef}/>
+                            <span onClick={()=> this.addDeivery()}>+ add new delivery frame</span>
+                        </div>
+
+                </div>
+
+                <div>Click to add to order</div>
                 { list.map((r:IMenu,index:number) =>
 
                     <div key={index} onClick={() => this.addToOrder.bind(this, r)()}>
 
-                        <span>{r.name}</span>
+                        <span>{r.name} - </span>
+                        <span> {r.price}</span>
 
                     </div>
 
@@ -146,5 +174,29 @@ export class MenuComponent extends Component <MenuComponentProps, MenuComponentS
 
     private onAddMenuClick() {
         this.openModal();
+    }
+
+    private editDeliveryHours() {
+        const {rest} = this.props;
+
+    }
+
+    private removeDeivery(index: number) {
+        const {rest} = this.props
+        if (rest) {
+            rest.delivery_hours.splice(index, 1);
+            restService.updateRest(rest);
+        }
+
+    }
+
+    private addDeivery() {
+        debugger
+        const {rest} = this.props
+        if (rest&&this.startRef!.current&&this.endRef!.current) {
+            rest.delivery_hours.push({start:this.startRef!.current!.value,end:this.endRef!.current!.value})
+            restService.updateRest(rest);
+        }
+
     }
 }

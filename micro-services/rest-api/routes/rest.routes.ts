@@ -15,6 +15,8 @@ export class RestRoutes {
     init() {
         this.router.route('/rest')
             .put(this.restController.AddNewRest);
+        this.router.route('/rest/update')
+            .put(this.restController.updateRest);
         this.router.route('/rest')
             .get(this.restController.allRest);
         this.router.route('/rest/:id')

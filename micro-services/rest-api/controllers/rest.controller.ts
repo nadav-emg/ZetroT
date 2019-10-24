@@ -4,6 +4,7 @@ import {RestService} from "../services/rest.service";
 
 @injectable()
 export class RestController {
+
     constructor(private restService: RestService) {
     }
 
@@ -18,6 +19,7 @@ export class RestController {
     }
 
 
+
     getRest = async (req: Request, res: Response) => {
         try {
             const rest = await this.restService.getRest(req.params.id);
@@ -25,6 +27,18 @@ export class RestController {
         } catch (e) {
             res.status(500).send(e.message);
         }
+    }
+    updateRest = async (req: Request, res: Response) => {
+        //let rest = new Rest(req.body)
+        try {
+            const id= req.query.id
+            await this.restService.updateRest(req.body);
+            res.status(200).send();
+        } catch (e) {
+            console.log(e.message);
+            res.status(400).send(e.message);
+        }
+
     }
 
     AddNewRest = async (req: Request, res: Response) => {
